@@ -23,6 +23,3 @@
 #define EXTERNAL_DAC_BACKPLANE
 
 #endif
-
-
-#include <LilyGoWatch.h>

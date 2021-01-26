@@ -21,14 +21,10 @@ typedef struct WiFiAP {
 EXTERN WIFIAP AccessPoints[]
 #ifdef __WIFIMAIN__
 = {
-    { "SSID-1", "password#1", TZ_EST },		// Newark, NJ
-    { "Phone-ssid", "#2password", TZ_EST },	// my phone hotspot
-    { "work-ssid", "password4job", TZ_EST },	// my job's WiFi
-    { "friend #1 ssid", "pass#2word", TZ_PST },	// friend one's WiFi
-    { "2nd friend SSID", "passwo#4rd", TZ_CST }, // friend two's WiFi
-    { "dentist-ssid", "pa#5ssword", TZ_EST },	// my dentist's WiFi
-    { "\xE9\x93\xAD\xE5\xBE\xB7\xE7\xBE\x8E\xE5\xAE\xB6" "1-2301", "mingde2301", TZ_CHINA },    // an AirBnB in China, kept as example of non-ASCII chars
-    { "friend 3 SSID", "passwor#6d", TZ_EST }	// friend three's WiFi
+    { "MayBe5", "Lan4Emmerich", TZ_CET },		// Newark, NJ
+    { "hal9000", "diebels23", TZ_CET },	// my phone hotspot
+    { "IFM-GAST", "ifmGastX1999", TZ_CET }	// my job's WiFi
+    
 }
 #endif
 ;

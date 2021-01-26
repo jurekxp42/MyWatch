@@ -293,7 +293,7 @@ int selected;
 
   sw1 = lv_switch_create(h, NULL);
   if(general_config.metric_units) { lv_switch_on(sw1, LV_ANIM_OFF); }
-  Serial.printf("Units switch should be %s\n", (general_config.metric_units) ? "Metric" : "Imperial");
+  Serial.printf("Units switch should be %s\n", (general_config.metric_units) ? "Metric" : "Metric");
   lv_obj_set_event_cb(sw1, stepc_chg_event_cb);
   lv_obj_align(sw1, NULL, LV_ALIGN_CENTER, -2, -90);
   lv_obj_set_style_local_value_str(sw1, LV_SWITCH_PART_BG, LV_STATE_DEFAULT, "Metric");
@@ -415,7 +415,7 @@ ReStart:
 	  switch(switch_num) {
 	    case 1 :
 	      general_config.metric_units = event_value;
-	      Serial.printf("Units switch now = %s\n", (general_config.metric_units) ? "Metric" : "Imperial");
+	      Serial.printf("Units switch now = %s\n", (general_config.metric_units) ? "Metric" : "Metric");
 	      break;
 	  }
 	  break;

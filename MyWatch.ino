@@ -1,16 +1,3 @@
-// An Arduino based framework for the Lilygo T-Watch 2020
-// Much of the code is based on the sample apps for the
-// T-watch that were written and copyrighted by Lewis He.
-//(Copyright (c) 2019 lewis he)
-
-/* ARDUINO IDE SETTINGS FOR THE ESP32:
-Board: TTGO-T-Watch
-upload speed 2000000
-partition scheme: 2x6.5M app, 3.6M SPIFFs
-*/
-
-// heavily modified by W.F.Dudley Jr.
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/timers.h"
@@ -158,21 +145,8 @@ void displayTime(uint8_t update_type) {
       date_is_up = false;
       steps_is_up = false;
     }
-    switch(chosen_skin) {
-	case LCARS :
-	    LCARS_Time(update_type);
-	    break;
-	case ANALOG :
-	    Analog_Time(update_type);
-	    break;
-	case LILYGO :
-	    LilyGo_Time(update_type);
-	    break;
-	case BASIC :
-	default :
-	    Basic_Time(update_type);
-	    break;
-    }
+    LilyGo_Time(update_type);
+    
 }
 
 void Serial_timestamp(void) {
@@ -215,7 +189,7 @@ void setup() {
   if (general_config.magic_number != CONFIG_REVISION ) { //this will set it up for very first use
     Serial.printf("magic wrong, was %ld, should be %ld\n", general_config.magic_number, CONFIG_REVISION);
     general_config.magic_number = CONFIG_REVISION;
-    general_config.clock_skin = BASIC;
+    general_config.clock_skin = 4;
 
     general_config.mqtt_server[0] = MQTT_IP0;
     general_config.mqtt_server[1] = MQTT_IP1;
@@ -501,7 +475,7 @@ Menu: uint8_t choice = modeMenu();
       if(choice != 0x1b) {
 	boolean is_page_change = false;
 	// Serial.printf("name of next app is %s\n", app_menu_ptr[choice].name);
-	if(!strncmp(app_menu_ptr[choice].name, "Apps ", 5)) {
+	if(!strncmp(app_menu_ptr[choice].name, "Apps", 4) || !strncmp(app_menu_ptr[choice].name, "Config", 6)) {
 	  is_page_change = true;
 	}
 	((void (*)(void))app_menu_ptr[choice].next_menu)();

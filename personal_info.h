@@ -1,24 +1,24 @@
 // edit this to have the IP, username, password of your MQTT server
 // also edit MY_TIMEZONE to show your "home" timezone
 
-#define MQTT_IP0 192
-#define MQTT_IP1 168
-#define MQTT_IP2 1
-#define MQTT_IP3 50
+#define MQTT_IP0 10
+#define MQTT_IP1 18
+#define MQTT_IP2 0
+#define MQTT_IP3 4
 #define MQTT_PORT 1883
-#define MQTT_USER "user-o-roony"
-#define MQTT_PASS "dumbpassword"
+#define MQTT_USER ""
+#define MQTT_PASS ""
 
-#define MY_TIMEZONE TZ_EST
+#define MY_TIMEZONE TZ_CET
 
 // language for weather information.  Feature not supported yet.
-#define MY_LANGUAGE "en"
+#define MY_LANGUAGE "de"
 
 // your personal keys
 // get this one from openweathermap.org
-#define ONECALLKEY "00000000001111111122222222333333"
+#define ONECALLKEY "31a78be80554c0f4776c76af58ed50da"
 // get this free API key from locationiq.com
-#define LOCATIONIQ_KEY "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+#define LOCATIONIQ_KEY "pk.63709c1c54889df9405fa5a5c04b3cd7"
 
 // if you have a home IP address, put it here (in quotes).  It will
 // save some time getting your location for weather when you're at home.
@@ -33,8 +33,8 @@
 // This is the latitude and longitude of the Washington Post newspaper.
 // #define HOME_LATITUDE "38.90284"
 // #define HOME_LONGITUDE "-77.03082"
-#define HOME_LATITUDE ""
-#define HOME_LONGITUDE ""
+#define HOME_LATITUDE "51.951410"
+#define HOME_LONGITUDE "7.631040"
 
 // #define HOME_CITY "Washington, DC"
-#define HOME_CITY ""
+#define HOME_CITY "Muenster"

@@ -37,9 +37,6 @@ struct mqdata {
   char value[MAX_DATA_WIDTH];
 };
 static struct mqdata sensor_menu1_data[12];
-static struct mqdata sensor_menu2_data[12];
-static struct mqdata ctrl_menu1_data[12];
-static struct mqdata ctrl_menu2_data[12];
 
 void flash_menu_item (uint8_t ncols, struct menu_item *mqmenu_p, uint8_t font, uint8_t bigfont, bool leave_room_for_label, int row, int col, struct mqdata *menu_data_p, boolean flash, uint8_t ptr_null_grey) {
 uint8_t yvals[4], yh;
@@ -91,7 +88,7 @@ uint16_t icolor;
       : ((ptr_null_grey ^ (mqmenu_p[ino].next_menu != NULL))
       ||!strcmp(mqmenu_p[ino].name, "Done")
       ||!strcmp(mqmenu_p[ino].name, "Exit")) ? TFT_DARKGREY
-	  : TFT_BLUE ;
+	  : TFT_DARKGREY ;
   tft->fillRoundRect(xvals[col], yvals[row], bwidth, yh-5, 6, icolor);
   tft->drawCentreString( mqmenu_p[ino].name, xtvals[col], yvals[row]+5, font);
   if(menu_data_p) {
@@ -394,42 +391,26 @@ char stopic[MAX_TOPIC_WIDTH];
   if(!svalue[0]) { return; }
   if(suffix[0]) {
     sprintf(stopic, "%s$.%s", Stopic, suffix);
-    // Serial.printf("store_mqtt_data(%s, %30s) line %d\n", stopic, svalue, __LINE__);
+    Serial.printf("store_mqtt_data(%s, %30s) line %d\n", stopic, svalue, __LINE__);
   }
   else {
     strncpy(stopic, Stopic, MAX_TOPIC_WIDTH);
   }
   for(int j = 0 ; j < 12 ; j++) {
     row = j / 3 ; col = j % 3 ;
-  // Serial.printf("store_mqtt_data(%s, %30s) line %d, j = %d\n", stopic, svalue, __LINE__, j);
-    if(sensor_menu1[j].topic && !strncmp(sensor_menu1[j].topic, stopic, MAX_TOPIC_WIDTH)) {
+  //Serial.printf("store_mqtt_data(%s, %s) line %d, j = %d\n", stopic, svalue, __LINE__, j);
+  //Serial.println ( sensor_menu1[j].topic );
+    if( strstr( sensor_menu1[j].name , "CO2" ) && strstr( stopic, "esp8266/co2" )) {
       strncpy(sensor_menu1_data[j].value, svalue, MAX_DATA_WIDTH);
-      if(current_menu == sensor_menu1) {
-	// Serial.printf("%s %s\n", stopic, svalue);
-	flash_menu_item(3, current_menu, 1, 2, true, row, col, sensor_menu1_data, false, 0);
-      }
+      Serial.printf("show value %s %s\n", stopic, svalue);
+      flash_menu_item(3, current_menu, 1, 2, true, row, col, sensor_menu1_data, false, 0);
+    } else if( strstr( sensor_menu1[j].name , "Temp" ) && strstr( stopic, "esp8266/sensor1_temperature_1" )) {
+      strncpy(sensor_menu1_data[j].value, svalue, MAX_DATA_WIDTH);
+      Serial.printf("show value %s %s\n", stopic, svalue);
+      flash_menu_item(3, current_menu, 1, 2, true, row, col, sensor_menu1_data, false, 0);
     }
-    else if(sensor_menu2[j].topic && !strncmp(sensor_menu2[j].topic, stopic, MAX_TOPIC_WIDTH)) {
-      strncpy(sensor_menu2_data[j].value, svalue, MAX_DATA_WIDTH);
-      if(current_menu == sensor_menu2) {
-	// Serial.printf("%s %s\n", stopic, svalue);
-	flash_menu_item(3, current_menu, 1, 2, true, row, col, sensor_menu2_data, false, 0);
-      }
-    }
-    else if(ctrl_menu1[j].topic && !strncmp(ctrl_menu1[j].topic, stopic, MAX_TOPIC_WIDTH)) {
-      strncpy(ctrl_menu1_data[j].value, svalue, MAX_DATA_WIDTH);
-      if(current_menu == ctrl_menu1) {
-	// Serial.printf("%s %s\n", stopic, svalue);
-	flash_menu_item(3, current_menu, 1, 2, true, row, col, ctrl_menu1_data, false, 0);
-      }
-    }
-    else if(ctrl_menu2[j].topic && !strncmp(ctrl_menu2[j].topic, stopic, MAX_TOPIC_WIDTH)) {
-      strncpy(ctrl_menu2_data[j].value, svalue, MAX_DATA_WIDTH);
-      if(current_menu == ctrl_menu2) {
-	// Serial.printf("%s %s\n", stopic, svalue);
-	flash_menu_item(3, current_menu, 1, 2, true, row, col, ctrl_menu2_data, false, 0);
-      }
-    }
+    
+   
   }
   // Serial.println(F("leaving store_mqtt_data()"));
 }
@@ -441,13 +422,7 @@ int16_t x, y;
 struct mqdata *menu_data_p;
 struct menu_item *last_current_menu;
     // patch up the menus, since I can't get forward references to work
-    sensor_menu1[9].next_menu = (struct menu_item *)sensor_menu2;
-    sensor_menu1[10].next_menu = (struct menu_item *)ctrl_menu1;
-
-    sensor_menu2[10].next_menu = (struct menu_item *)ctrl_menu1;
-
-    ctrl_menu1[10].next_menu = (struct menu_item *)ctrl_menu2;
-
+    
     next_topic_insert = 0;
     memset(topics_to_monitor, '\0', sizeof(topics_to_monitor)/sizeof(char));
     MQTTserver[0] = general_config.mqtt_server[0];
@@ -462,12 +437,12 @@ int mSelect;
 enum SWIPE_DIR swipe;
     if(1) {	// this connects to wifi, MQTT server, and runs MQTTcallback
       if(connect_to_wifi(verbose, &BestAP, true, true) && verbose) {
-	  close_WiFi();
-	  Serial.printf("connect to wifi failed\n");
-	  tft->setTextColor(TFT_YELLOW, TFT_BLACK);
-	  tft->drawString("Connect to WiFi Failed!",  0, 5, 2);
-	  delay(5000);
-	  return;
+    	  close_WiFi();
+    	  Serial.printf("connect to wifi failed\n");
+    	  tft->setTextColor(TFT_YELLOW, TFT_BLACK);
+    	  tft->drawString("Connect to WiFi Failed!",  0, 5, 2);
+    	  delay(5000);
+    	  return;
       }
       ecnt = 0;
       while(!connected && ecnt < 400) {
@@ -495,18 +470,16 @@ enum SWIPE_DIR swipe;
 	tft->printf("Connected to %s channel %d", BestAP.ssid, BestAP.channel);
 	tft->setCursor(0, 50 + (15 * 9));
 	tft->print(F("Trying to connect to "));
-	tft->print(MQTTserver);
+	tft->print("10.18.0.4");
 	tft->setCursor(0, 50 + (15 * 10));
 	tft->print(F("my ip is: "));
 	tft->print(WiFi.localIP());
       }
       Serial.print(F("Trying to connect to "));
-      Serial.print(MQTTserver);
+      Serial.print("10.18.0.4");
       Serial.printf(" on port %d.\n", general_config.mqtt_port);
-      Serial.printf("mqtt user = %s, passwd = %s\n",
-	general_config.mqtt_user,
-	general_config.mqtt_pass);
-      mqttClient.setServer(MQTTserver, general_config.mqtt_port);
+      Serial.printf("mqtt user = %s, passwd = %s\n",	general_config.mqtt_user,	general_config.mqtt_pass);
+      mqttClient.setServer("10.18.0.4", general_config.mqtt_port);
       mqttClient.setCallback(MQTTcallback);
 
       mqtt_reconnect();
@@ -517,22 +490,11 @@ enum SWIPE_DIR swipe;
     current_menu = sensor_menu1;
     this_sec = millis();
     while(this_sec + 30000 > millis()) {
-Top:  if(current_menu == sensor_menu1) {
-	menu_label = "sens 2 <-- sensors page 1 ^ ctrl 1";
-	menu_data_p = sensor_menu1_data;
-      }
-      if(current_menu == sensor_menu2) {
-	menu_label = "ctrl 1 ^ sensors page 2 --> sens 1";
-	menu_data_p = sensor_menu2_data;
-      }
-      if(current_menu == ctrl_menu1) {
-	menu_label = "ctrl 2 V control page 1 --> sens 1";
-	menu_data_p = ctrl_menu1_data;
-      }
-      if(current_menu == ctrl_menu2) {
-	menu_label = "ctrl 1 ^ control page 2 --> sens 1";
-	menu_data_p = ctrl_menu2_data;
-      }
+Top:  
+  	menu_label = "Waehle Sensor";
+  	menu_data_p = sensor_menu1_data;
+      
+      
       last_current_menu = current_menu;
       // Serial.println(F("before draw_button_menu()"));
       draw_button_menu(3, current_menu, 1, 2, true, menu_label, menu_data_p, 0);
@@ -543,88 +505,53 @@ Top:  if(current_menu == sensor_menu1) {
 	  int col = mSelect % 3;
 	  int row = mSelect / 3;
 	  flash_menu_item(3, current_menu, 1, 2, true, row, col, menu_data_p, true, 0);
-	  if(current_menu == sensor_menu1) { this_pick = &sensor_menu1[mSelect]; }
-	  if(current_menu == sensor_menu2) { this_pick = &sensor_menu2[mSelect]; }
-	  if(current_menu == ctrl_menu1) { this_pick = &ctrl_menu1[mSelect]; }
-	  if(current_menu == ctrl_menu2) { this_pick = &ctrl_menu2[mSelect]; }
+	  this_pick = &sensor_menu1[mSelect];
 	  if(!strcmp(this_pick->name, "Exit")) {
 	    Serial.printf("user chose %s\n", this_pick->name);
 	    goto Exit;
-	  }
-	  if(this_pick->next_menu) {
-	    current_menu = (struct menu_item *)this_pick->next_menu;
-	    Serial.printf("user chose menu %s\n", this_pick->name);
-	    goto Top;
-	  }
-	  else if(this_pick->topic) {	// if cmnd/foo then do foo
+	  } else if(this_pick->topic) {	// if cmnd/foo then do foo
 	    // so if it's in a "ctrl" menu, then send MQTT command
-	    if(current_menu == ctrl_menu1
-	    || current_menu == ctrl_menu2) {
-	      Serial.printf("user touched %s\n", this_pick->topic);
-	      strcpy(buff, this_pick->topic);
-	      memcpy(buff, "cmnd", 4);
-	      char *cp;
-	      char sfx[2];
-	      char newvalue[5];
-	      sfx[1] = '\0';
-	      cp = strstr(buff, "STATE$.POWER4");
-	      sfx[0] = '4';
-	      if(!cp) {
-		cp = strstr(buff, "STATE$.POWER3");
-		sfx[0] = '3';
-	      }
-	      if(!cp) {
-		cp = strstr(buff, "STATE$.POWER2");
-		sfx[0] = '2';
-	      }
-	      if(!cp) {
-		cp = strstr(buff, "STATE$.POWER1");
-		sfx[0] = '1';
-	      }
-	      if(!cp) {
-		cp = strstr(buff, "STATE$.POWER");
-		sfx[0] = '\0';	// "erase" the numerical suffix
-	      }
-	      strcpy(cp, "power");
-	      if(sfx[0]) { strcat(buff, sfx); }
-	      Serial.printf("command topic %s, mSelect = %d, value was %s\n",
-		buff, mSelect,
-		(menu_data_p[mSelect].value[0]) ? menu_data_p[mSelect].value : "nil");
-	      strcpy(newvalue, (menu_data_p[mSelect].value[1] == 'N'
-	      || menu_data_p[mSelect].value[1] == 'n') ? "off" : "on");
-	      Serial.printf("command: topic %s = %s\n", buff, newvalue);
-	      mqttClient.publish(buff, newvalue);
-	      strcpy(menu_data_p[mSelect].value, newvalue);
-	      flash_menu_item(3, current_menu, 1, 2, true, row, col, menu_data_p, false, 1);
-	    }
+	    if( 1 == 2) {
+        Serial.printf("user touched %s\n", this_pick->topic);
+        strcpy(buff, this_pick->topic);
+        memcpy(buff, "cmnd", 4);
+        char *cp;
+        char sfx[2];
+        char newvalue[5];
+        sfx[1] = '\0';
+        cp = strstr(buff, "STATE$.POWER4");
+        sfx[0] = '4';
+        if(!cp) {
+          cp = strstr(buff, "STATE$.POWER3");
+          sfx[0] = '3';
+        }
+        if(!cp) {
+          cp = strstr(buff, "STATE$.POWER2");
+          sfx[0] = '2';
+        }
+        if(!cp) {
+          cp = strstr(buff, "STATE$.POWER1");
+          sfx[0] = '1';
+        }
+        if(!cp) {
+          cp = strstr(buff, "STATE$.POWER");
+          sfx[0] = '\0';  // "erase" the numerical suffix
+        }
+        strcpy(cp, "power");
+        if(sfx[0]) { strcat(buff, sfx); }
+        Serial.printf("command topic %s, mSelect = %d, value was %s\n",    buff, mSelect,    (menu_data_p[mSelect].value[0]) ? menu_data_p[mSelect].value : "nil");
+        strcpy(newvalue, (menu_data_p[mSelect].value[1] == 'N'
+        || menu_data_p[mSelect].value[1] == 'n') ? "off" : "on");
+        Serial.printf("command: topic %s = %s\n", buff, newvalue);
+        mqttClient.publish(buff, newvalue);
+        strcpy(menu_data_p[mSelect].value, newvalue);
+        flash_menu_item(3, current_menu, 1, 2, true, row, col, menu_data_p, false, 1);
+      }
 	  }
 	}
 	else if(mSelect > NODIR) {
 	  Serial.printf("swipe %s, ", swipe_names[mSelect - (int)NODIR]);
-	  char *mname;
-	  switch(mSelect) {
-	    case UP :
-	      current_menu = ctrl_menu1;
-	      mname = "ctrl_menu1";
-	      break;
-	    case DOWN :
-	      current_menu = ctrl_menu2;
-	      mname = "ctrl_menu2";
-	      break;
-	    case LEFT :	// show the screen to the right
-	      current_menu = sensor_menu2;
-	      mname = "sensor_menu2";
-	      break;
-	    case RIGHT :	// show the screen to the left
-	      current_menu = sensor_menu1;
-	      mname = "sensor_menu1";
-	      break;
-	  }
-	  Serial.printf("user chose menu %s\n", mname);
-	  if(last_current_menu != current_menu) {
-	      goto Top;
-	  }
-	  break;
+	  
 	}
 	my_idle();
 	if (mqttClient.connected()) {
@@ -671,6 +598,7 @@ uint8_t errcnt;
 
 #define MAX_PAYLOAD 2001
 void MQTTcallback(char* topic, byte* payload, unsigned int length) {
+  //Serial.println ( "callback " +topic );
 const size_t capacity = JSON_OBJECT_SIZE(4) + JSON_OBJECT_SIZE(8) + 160;
 // const size_t capacity = 2*JSON_OBJECT_SIZE(5) + 130;
 // const size_t capacity = JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 80;
@@ -728,7 +656,7 @@ boolean found_powerN = false;
   if(!found_powerN && strstr(json, "POWER")) {
     is_power = true;
   }
-  // Serial.printf("MQTTcallback(%s, %30s) line %d\n", longtopic, json, __LINE__);
+  Serial.printf("MQTTcallback(%s, %30s) line %d\n", longtopic, json, __LINE__);
 
   if(strchr(json, '{')) /* } */ {	// if payload is JSON
     DynamicJsonDocument doc(capacity);

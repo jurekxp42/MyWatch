@@ -32,9 +32,6 @@ struct menu_item{
   void* next_menu;
 };
 
-void Analog_Time(uint8_t);
-void LCARS_Time(uint8_t);
-void Basic_Time(uint8_t);
 void LilyGo_Time(uint8_t);
 boolean if_not_home_tz(void);
 
@@ -52,19 +49,12 @@ EXTERN boolean rtcIrq;
 EXTERN struct menu_item skin_menu[]
 #ifdef __MAIN__
   = {
-      { "Analog", "", (void *)&Analog_Time },
-      { "LCARS",  "", (void *)&LCARS_Time  },
-      { "Basic",  "", (void *)&Basic_Time  },
       { "LilyGo", "", (void *)&LilyGo_Time }
-//    { "Exit",  "",  NULL      }
     }
 #endif
     ;
 
 // skins:
-#define LCARS 1
-#define BASIC 2
-#define ANALOG 3
 #define LILYGO 4
 
 uint8_t modeMenu(void);	// app selector
@@ -97,9 +87,6 @@ void appWiFiScan(void);		// wifi scanner tool
 void appColorPicker(void);
 void appShutdown(void);
 
-void LCARS_Time(uint8_t);
-void Basic_Time(uint8_t);
-void Analog_Time(uint8_t);
 void charge_icon (uint16_t, uint16_t, uint16_t, uint16_t, boolean);
 void battery_icon(uint16_t, uint16_t, uint16_t, uint16_t);
 void steps_icon (uint16_t, uint16_t, uint16_t, uint16_t, uint8_t);
@@ -143,18 +130,18 @@ EXTERN const char *last_app_name;	// name of last app that was selected
 EXTERN struct menu_item watch_apps[]
 #ifdef __MAIN__
 = {
-    { "Stop Watch",  "", (void *)&appStopWatch },
-    { "Weather",     "", (void *)&appWeather },
-    { "Battery",     "", (void *)&appBattery },
-    { "Calculator",  "", (void *)&appCalculator },
-    { "NTP Time",    "", (void *)&appNTPTime },
-    { "Skin Select", "", (void *)&skinMenu },
-    { "MQTT Client", "", (void *)&appMQTT },
-    { "Alarm Set.",  "", (void *)&alarmSettings },
-    { "Settings",    "", (void *)&appSettings },
-    { "Apps 2",      "", (void *)&switch_menu },
-    { "Apps 3",      "", (void *)&switch_menu },
-    { "Clock",       "", NULL }
+    { "Timer",  "", (void *)&appStopWatch },
+    { "Wetter",     "", (void *)&appWeather },
+    { "Bat",     "", (void *)&appBattery },
+    { "Rechner",  "", (void *)&appCalculator },
+    { "Layby",        "", (void *)&appMaze },
+    { "MQTT", "", (void *)&appMQTT },
+    { "M-brot",  "", (void *)&appMandelbrot },
+    { "Malen",       "", (void *)&appPaint },
+    { "Kalender",    "", (void *)&appCalendar },
+    { "Touch",  "", (void *)&appTouch },
+    { "Config",      "", (void *)&switch_menu },
+    { "Back",       "", NULL }
 }
 #endif
 ;
@@ -173,18 +160,19 @@ EXTERN const char *app_labels[]
 EXTERN struct menu_item watch_apps2[]
 #ifdef __MAIN__
 = {
-    { "Jupiter",     "", (void *)&jSats },
-    { "Mandelbrot",  "", (void *)&appMandelbrot },
-    { "Maze",        "", (void *)&appMaze },
-    { "Calendar",    "", (void *)&appCalendar },
-    { "Delete WiFi", "", (void *)&appDelWiFi },
-    { "Life",        "", (void *)&appLife },
-    { "Level",       "", (void *)&appLevel },
-    { "Bitcoin",     "", (void *)&appBitcoin },
-    { "Man SetTime", "", (void *)&appSetTime },
-    { "Apps 1",      "", (void *)&switch_menu },
-    { "Apps 3",      "", (void *)&switch_menu },
-    { "Clock",       "", NULL }
+    { "WiFi Scan",   "", (void *)appWiFiScan },
+    
+    { "NTP",    "", (void *)&appNTPTime },    
+    { "Wecker",  "", (void *)&alarmSettings },
+    { "Einst.",    "", (void *)&appSettings },
+    { "Del WiFi", "", (void *)&appDelWiFi },
+    { "Leben",        "", (void *)&appLife },
+    { "Accel",       "", (void *)&appLevel },
+    { "Farbe", "", (void *)&appColorPicker },
+    { "Zeit", "", (void *)&appSetTime },
+    { "Wetter", "", (void *)weatherSettings },
+    { "Apps",      "", (void *)&switch_menu },
+    { "Back",       "", NULL }
 }
 #endif
 ;
@@ -200,35 +188,6 @@ EXTERN const char *app_labels2[]
 #endif
 ;
 
-EXTERN struct menu_item watch_apps3[]
-#ifdef __MAIN__
-= {
-    { "Touch Test",  "", (void *)&appTouch },
-    { "WiFi Scan",   "", (void *)appWiFiScan },
-    { "Reset Step",  "", (void *)resetStepCounter },
-    { ""          ,  "", NULL },
-    { "Paint",       "", (void *)&appPaint },
-    { "Power Off",   "", (void *)&appShutdown },
-    { "Man SetTime", "", (void *)&appSetTime },
-    { "ColorPicker", "", (void *)&appColorPicker },
-    { "Weather Set", "", (void *)weatherSettings },
-    { "Apps 1",      "", (void *)&switch_menu },
-    { "Apps 2",      "", (void *)&switch_menu },
-    { "Clock",       "", NULL }
-}
-#endif
-;
-
-EXTERN const char *app_labels3[]
-#ifdef __MAIN__
-		      = {
-			  watch_apps3[0].name, watch_apps3[1].name, watch_apps3[2].name,
-			  watch_apps3[3].name, watch_apps3[4].name, watch_apps3[5].name,
-			  watch_apps3[6].name, watch_apps3[7].name, watch_apps3[8].name,
-			  watch_apps3[9].name, watch_apps3[10].name, watch_apps3[11].name
-			}
-#endif
-;
 
 EXTERN TTGOClass *ttgo;
 EXTERN uint8_t hh, mm, ss, mmonth, dday, gdow; // H, M, S variables

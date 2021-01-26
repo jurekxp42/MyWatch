@@ -169,7 +169,7 @@ uint32_t this_sec;
 int err, ecnt, lastmode, mode, mSelect, this_wifi, alert_pages;
 int last_char_index, alert_summary_length, page2sumidx[10], owcres;
 int16_t x, y;
-char temp_unit = (general_config.metric_units) ? 'C' : 'F';
+char temp_unit = (general_config.metric_units) ? 'C' : 'C';
 const char *velocity_unit = (general_config.metric_units) ? "km/hr" : "mi/hr";
   get_loc_city[0] = '\0';
   if(connect_to_wifi(verbose, &BestAP, true, true) && verbose) {

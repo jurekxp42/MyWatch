@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        },
+        {
+            "name": "raspi",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/pi/arduino_ide/libraries",
+                "/home/pi/Projekte/libraries",
+                "/home/pi/arduino_ide/hardware/arduino/avr/cores/arduino",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/EEPROM/src",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/HID/src",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/SoftwareSerial/src",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/SPI/src",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/Wire/src",
+                "/home/pi/arduino_ide/hardware/arduino/avr/libraries/SPI/src"
+            
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

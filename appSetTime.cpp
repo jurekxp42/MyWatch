@@ -57,7 +57,7 @@ uint16_t icolor;
     yvals[3] = 185;
     yh = 50;
     if(top_label) {
-      ttgo->tft->setTextColor(TFT_GREEN);
+      ttgo->tft->setTextColor(TFT_SILVER);
       ttgo->tft->drawCentreString( top_label, half_width, 5, font);
     }
   }
@@ -87,11 +87,11 @@ uint16_t icolor;
   // was ttgo->tft->fillRect(0, 35, 80, 50, TFT_BLUE);
   // number keys are 80 x 50, four rows of three
   // x=0, 81, 161, y=35, 85, 135, 185
-  ttgo->tft->setTextColor(TFT_GREEN);
+  ttgo->tft->setTextColor(TFT_LIGHTGREY);
   for(row = 0 ; row < 4 ; row++) {
     for(col = 0 ; col < (num_keys / 4) ; col++) {
       int ino = col + (row * (num_keys / 4));
-      icolor = (!strcmp(b_labels[ino], "CANCEL") || !strcmp(b_labels[ino], "DONE")) ? TFT_DARKGREY : TFT_BLUE ;
+      icolor = (!strcmp(b_labels[ino], "CANCEL") || !strcmp(b_labels[ino], "DONE")) ? TFT_DARKGREY : TFT_DARKGREY ;
       ttgo->tft->fillRoundRect(xvals[col], yvals[row],
 	(num_keys == 12) ? 75 : 55, yh-5, 6, icolor);
       ttgo->tft->drawCentreString(b_labels[ino], xtvals[col], yvals[row]+5, font);
