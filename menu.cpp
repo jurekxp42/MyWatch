@@ -1,6 +1,3 @@
-// Dan Geiger's app menu code
-//
-// heavily modified by W.F.Dudley Jr.
 
 #include "config.h"
 #include "DudleyWatch.h"
@@ -18,11 +15,7 @@ void switch_menu(void) {
     app_label_ptr = &app_labels2[0];
     Serial.println(F("switch to page 2"));
   }
-//  else if(!strcmp(last_app_name, "Apps 3")) {
-//    app_menu_ptr = &watch_apps3[0];
-//    app_label_ptr = &app_labels3[0];
-//    Serial.println(F("switch to page 3"));
-//  }
+
 }
 
 uint8_t modeMenu(void) {

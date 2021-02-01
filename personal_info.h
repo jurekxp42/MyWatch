@@ -15,10 +15,7 @@
 #define MY_LANGUAGE "de"
 
 // your personal keys
-// get this one from openweathermap.org
-#define ONECALLKEY "31a78be80554c0f4776c76af58ed50da"
-// get this free API key from locationiq.com
-#define LOCATIONIQ_KEY "pk.63709c1c54889df9405fa5a5c04b3cd7"
+
 
 // if you have a home IP address, put it here (in quotes).  It will
 // save some time getting your location for weather when you're at home.

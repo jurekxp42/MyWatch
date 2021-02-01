@@ -134,7 +134,7 @@ EXTERN struct menu_item watch_apps[]
     { "Wetter",     "", (void *)&appWeather },
     { "Bat",     "", (void *)&appBattery },
     { "Rechner",  "", (void *)&appCalculator },
-    { "Layby",        "", (void *)&appMaze },
+    { "Laby",        "", (void *)&appMaze },
     { "MQTT", "", (void *)&appMQTT },
     { "M-brot",  "", (void *)&appMandelbrot },
     { "Malen",       "", (void *)&appPaint },
